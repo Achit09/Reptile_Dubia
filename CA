@@ -1,0 +1,80 @@
+//import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+/*CN
+歡迎來到Dubia加密貨幣世界，這是為爬蟲圈內設計的專屬打賞和交易平台。
+Dubia採用先進的區塊鏈技術，以確保交易的安全性、匿名性和透明性，讓用戶在這個全新的貨幣生態系統中獲得無與倫比的體驗。
+
+Dubia的設計目標是為爬蟲圈內的使用者提供一個可靠且有效的打賞機制。
+透過Dubia，用戶能夠輕鬆地通過一個去中心化的平台給予創作者、開發者或其他社群成員獎勵，以表達對他們的感謝和支持。
+這種激勵機制有助於激發更多的創作和優質內容的產生，同時也促進了社群的活躍。
+
+Dubia並不僅僅是一種打賞工具，它同時是一個安全且便捷的交易平台。無論是在社群內部還是跨社群之間，用戶都可以使用Dubia進行快速的資產交換，享受極低的交易手續費。
+這為爬蟲圈內的成員提供了更多的商業機會，並促進了貨幣的實際應用。
+
+我們致力於Dubia生態系統的不斷發展和完善，以確保用戶能夠擁有順暢的使用體驗。
+我們不斷推出新功能和改進系統性能，並與社群緊密互動，聆聽用戶的意見和建議。
+Dubia的目標是成為爬蟲圈內最受歡迎的加密貨幣，為用戶帶來更多機會和價值。
+
+無論您是創作者、開發者，還是熱愛爬蟲圈的成員，Dubia都歡迎您的加入！
+讓我們攜手共建這個獨特的加密貨幣世界，共同創造更美好的未來。感謝您的支持和參與！
+*/// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+contract DubiaToken {
+    string public name = "Dubia Token";
+    string public symbol = "DUB";
+    uint8 public decimals = 9;
+    uint256 public _totalSupply = 1_000_000_000 * 10**8;
+    mapping(address => uint256) private _balances;
+    mapping(address => mapping(address => uint256)) private _allowances;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+ 
+
+    function totalSupply() external view returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) external view returns (uint256) {
+        return _balances[account];
+    }
+
+    function transfer(address to, uint256 amount) external returns (bool) {
+        require(to != address(0), "ERC20: transfer to the zero address");
+        require(_balances[msg.sender] >= amount, "ERC20: transfer amount exceeds balance");
+
+        _balances[msg.sender] -= amount;
+        _balances[to] += amount;
+
+        emit Transfer(msg.sender, to, amount);
+        return true;
+    }
+
+    function allowance(address owner, address spender) external view returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
+    function approve(address spender, uint256 amount) external returns (bool) {
+        _allowances[msg.sender][spender] = amount;
+
+        emit Approval(msg.sender, spender, amount);
+        return true;
+    }
+
+    function transferFrom(address from, address to, uint256 amount) external returns (bool) {
+        require(from != address(0), "ERC20: transfer from the zero address");
+        require(to != address(0), "ERC20: transfer to the zero address");
+        require(_balances[from] >= amount, "ERC20: transfer amount exceeds balance");
+        require(_allowances[from][msg.sender] >= amount, "ERC20: transfer amount exceeds allowance");
+
+        _balances[from] -= amount;
+        _balances[to] += amount;
+        _allowances[from][msg.sender] -= amount;
+
+        emit Transfer(from, to, amount);
+        return true;
+    }
+
+    
